@@ -1,13 +1,21 @@
-// reserve space in memory for an object of type PImage, to store the source image //<>//
+import processing.pdf.*; //<>//
+PGraphics vectorImage;
+// reserve space in memory for an object of type PImage, to store the source image
 PImage source; 
 static int SIZE = 5;
-
+ 
 // setup() function runs once only
 void setup() {
+ 
 
   // create the canvas
   // WIDTH  HEIGHT
-  size(768, 1024); 
+  size(725, 544); 
+  vectorImage = createGraphics(width, height, PDF, "output.pdf");
+  vectorImage.beginDraw();
+  noFill();
+  vectorImage.noFill();
+
 
   //strokeWeight(2);
   // make the backgound white
@@ -23,9 +31,12 @@ void setup() {
   // and with 424,000 values
   // the final position will then be at 423,999
   source.loadPixels();
+}
 
+// draw() runs repeatedly until we tell it to stop
+void draw() {
   // loop from first pixel, at position 0, to final pixel, at position 423,999
-  for (int position = 0; position <= 786431; position += 1) {
+  for (int position = 0; position <= 394399; position += 1) {
 
     // get brightness of current pixel
     float b = 255 - brightness(source.pixels[position]);
@@ -42,17 +53,22 @@ void setup() {
     //&& lets us run TWO conditions
     //only run whats in the code block when BOTH conditions are true 
     //CONDITION 1 AND CONDITION 2
-    if ( (x > 10) &&  (y > 10) && (y % SIZE == 0) && (x % SIZE == 0)) {
+    if ( (x > 11) &&  (y > 11) && (y % SIZE == 0) && (x % SIZE == 0)) {
 
       // draw an ellipse at position of current pixel
       ellipse(x, y, diameter, diameter);
+      vectorImage.ellipse(x, y, diameter, diameter);
+      // we don't need to animate, so stop the automatic loop
+      noLoop();
     }
   }
 }
 
-// draw() runs repeatedly until we tell it to stop
-void draw() {
-
-  // we don't need to animate, so stop the automatic loop
-  noLoop();
+void keyPressed() {
+  if (key == 's') {
+    vectorImage.endDraw();
+    vectorImage.dispose();
+    vectorImage = null;
+    exit();
+  }
 }
